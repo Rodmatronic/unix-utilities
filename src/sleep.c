@@ -38,7 +38,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <getopt.h>
 
+extern int optind;
 void alarmh(int);
 void usage(void);
 

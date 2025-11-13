@@ -43,7 +43,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 
+extern int optind;
 void		stime_arg1(char *, struct timespec *);
 void		stime_arg2(char *, int, struct timespec *);
 void		stime_argd(char *, struct timespec *);
