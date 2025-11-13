@@ -54,7 +54,7 @@ extern char * optarg;
 
 long
 l_strtonum(const char *numstr, long minval, long maxval,
-    const char **errstrp)
+	const char **errstrp)
 {
 	long ll = 0;
 	int error = 0;
@@ -182,7 +182,7 @@ void
 setthetime(char *p, const char *pformat)
 {
 	struct tm *lt;
-	struct timeval tv;
+	struct timespec ts;
 	char *dot, *t;
 	time_t now;
 	int yearset = 0;
@@ -193,7 +193,7 @@ setthetime(char *p, const char *pformat)
 		exit(1);
 	}
 
-	lt->tm_isdst = -1;			/* correct for DST */
+	lt->tm_isdst = -1;
 
 	for (t = p, dot = NULL; *t; ++t) {
 		if (isdigit((unsigned char)*t))
@@ -205,7 +205,7 @@ setthetime(char *p, const char *pformat)
 		badformat();
 	}
 
-	if (dot != NULL) {			/* .SS */
+	if (dot != NULL) {
 		*dot++ = '\0';
 		if (strlen(dot) != 2)
 			badformat();
@@ -216,34 +216,32 @@ setthetime(char *p, const char *pformat)
 		lt->tm_sec = 0;
 
 	switch (strlen(p)) {
-	case 12:				/* cc */
+	case 12:
 		lt->tm_year = (ATOI2(p) * 100) - 1900;
 		yearset = 1;
 		/* FALLTHROUGH */
-	case 10:				/* yy */
-		if (!yearset) {
-			/* mask out current year, leaving only century */
+	case 10:
+		if (!yearset)
 			lt->tm_year = ((lt->tm_year / 100) * 100);
-		}
 		lt->tm_year += ATOI2(p);
 		/* FALLTHROUGH */
-	case 8:					/* mm */
+	case 8:
 		lt->tm_mon = ATOI2(p);
 		if ((lt->tm_mon > 12) || !lt->tm_mon)
 			badformat();
-		--lt->tm_mon;			/* time struct is 0 - 11 */
+		--lt->tm_mon;
 		/* FALLTHROUGH */
-	case 6:					/* dd */
+	case 6:
 		lt->tm_mday = ATOI2(p);
 		if ((lt->tm_mday > 31) || !lt->tm_mday)
 			badformat();
 		/* FALLTHROUGH */
-	case 4:					/* HH */
+	case 4:
 		lt->tm_hour = ATOI2(p);
 		if (lt->tm_hour > 23)
 			badformat();
 		/* FALLTHROUGH */
-	case 2:					/* MM */
+	case 2:
 		lt->tm_min = ATOI2(p);
 		if (lt->tm_min > 59)
 			badformat();
@@ -252,11 +250,11 @@ setthetime(char *p, const char *pformat)
 		badformat();
 	}
 
-
 	if (pformat != NULL && strstr(pformat, "%s") != NULL)
 		tval = timegm(lt);
 	else
 		tval = mktime(lt);
+
 	if (tval == -1) {
 		fprintf(stderr, "specified date is outside allowed range\n");
 		exit(1);
@@ -265,22 +263,29 @@ setthetime(char *p, const char *pformat)
 	if (jflag)
 		return;
 
-	/* set the time */
 	if (slidetime) {
 		if ((now = time(NULL)) == -1) {
 			perror("time");
 			exit(1);
 		}
-		tv.tv_sec = tval - now;
-		tv.tv_usec = 0;
-		if (adjtime(&tv, NULL) == -1) {
-			perror("adjtime");
-			exit(1);
+		/* emulate adjtime by shifting CLOCK_REALTIME relatively */
+		time_t delta = tval - now;
+		if (delta != 0) {
+			struct timespec cur;
+			if (clock_gettime(CLOCK_REALTIME, &cur) == -1) {
+				perror("clock_gettime");
+				exit(1);
+			}
+			cur.tv_sec += delta;
+			if (clock_settime(CLOCK_REALTIME, &cur) == -1) {
+				perror("clock_settime");
+				exit(1);
+			}
 		}
 	} else {
-		tv.tv_sec = tval;
-		tv.tv_usec = 0;
-		if (settimeofday(&tv, NULL)) {
+		ts.tv_sec = tval;
+		ts.tv_nsec = 0;
+		if (clock_settime(CLOCK_REALTIME, &ts) == -1) {
 			/* We still print the date, enable below if
 			 * you are peculiar. */
 			/*perror("settimeofday");*/
@@ -290,6 +295,7 @@ setthetime(char *p, const char *pformat)
 	if ((p = getlogin()) == NULL)
 		p = "???";
 }
+
 
 static void
 badformat(void)
@@ -302,7 +308,7 @@ void
 usage(void)
 {
 	fprintf(stderr,
-	    "usage: date [-aju] [-r seconds]\n"
-	    "\t[-z output_zone] [+format] [[[[[[cc]yy]mm]dd]HH]MM[.SS]]\n");
+		"usage: date [-aju] [-r seconds]\n"
+		"\t[-z output_zone] [+format] [[[[[[cc]yy]mm]dd]HH]MM[.SS]]\n");
 	exit(1);
 }
