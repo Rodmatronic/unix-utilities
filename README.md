@@ -3,7 +3,7 @@ Free simple unix utilities
 
 # Compatibility status
 
-| Utility | Linux | Darwin | Haiku |
+| Utility | Debian | Darwin | Haiku |
 |:-------|:-----------------------:|:------------------------:|:------------------------:|
 |basename|$${\color{lightgreen}✓}$$| $${\color{lightgreen}✓}$$| $${\color{lightgreen}✓}$$|
 |cat     |$${\color{lightgreen}✓}$$| $${\color{lightgreen}✓}$$| $${\color{lightgreen}✓}$$|
