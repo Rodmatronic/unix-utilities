@@ -186,6 +186,7 @@ setthetime(char *p, const char *pformat)
 	char *dot, *t;
 	time_t now;
 	int yearset = 0;
+	time_t delta;
 
 	lt = localtime(&tval);
 	if (lt == NULL) {
@@ -269,7 +270,7 @@ setthetime(char *p, const char *pformat)
 			exit(1);
 		}
 		/* emulate adjtime by shifting CLOCK_REALTIME relatively */
-		time_t delta = tval - now;
+		delta = tval - now;
 		if (delta != 0) {
 			struct timespec cur;
 			if (clock_gettime(CLOCK_REALTIME, &cur) == -1) {
