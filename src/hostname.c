@@ -30,7 +30,6 @@
  * SUCH DAMAGE.
  */
 
-#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,11 +62,15 @@ main(int argc, char *argv[])
 		usage();
 
 	if (*argv) {
-		if (sethostname(*argv, strlen(*argv)))
-			err(1, "sethostname");
+		if (sethostname(*argv, strlen(*argv))) {
+			perror("sethostname");
+			exit(1);
+		}
 	} else {
-		if (gethostname(hostname, sizeof(hostname)))
-			err(1, "gethostname");
+		if (gethostname(hostname, sizeof(hostname))) {
+			perror("gethostname");
+			exit(1);
+		}
 		if (sflag && (p = strchr(hostname, '.')))
 			*p = '\0';
 		(void)printf("%s\n", hostname);

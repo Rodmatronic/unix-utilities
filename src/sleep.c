@@ -33,7 +33,6 @@
 #include <sys/time.h>
 
 #include <ctype.h>
-#include <err.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>

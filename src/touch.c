@@ -37,7 +37,6 @@
 #include <time.h>
 
 #include <ctype.h>
-#include <err.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -140,7 +139,7 @@ main(int argc, char *argv[])
 			continue;
 		if (errno != ENOENT) {
 			rval = 1;
-			warn("%s", *argv);
+			perror(*argv);
 			continue;
 		}
 
@@ -152,15 +151,15 @@ main(int argc, char *argv[])
 		fd = open(*argv, O_WRONLY | O_CREAT, 0666);
 		if (fd == -1) {
 			rval = 1;
-			warn("%s", *argv);
+			perror(*argv);
 			continue;
 		}
 		if (futimens(fd, ts) == -1) {
-			warn("%s", *argv);
+			perror(*argv);
 			rval = 1;
 		}
 		if (close(fd) == -1) {
-			warn("%s", *argv);
+			perror(*argv);
 			rval = 1;
 		}
 	}
@@ -178,8 +177,10 @@ stime_arg1(char *arg, struct timespec *tsp)
 	char		*dot, *p;
 					/* Start with the current time. */
 	tmptime = time(NULL);
-	if ((lt = localtime(&tmptime)) == NULL)
-		err(1, "localtime");
+	if ((lt = localtime(&tmptime)) == NULL) {
+		perror("localtime");
+		exit(1);
+	}
 					/* [[CC]YY]MMDDhhmm[.SS] */
 	for (p = arg, dot = NULL; *p != '\0'; p++) {
 		if (*p == '.' && dot == NULL)
@@ -237,9 +238,10 @@ stime_arg1(char *arg, struct timespec *tsp)
 
 	lt->tm_isdst = -1;		/* Figure out DST. */
 	tsp[0].tv_sec = tsp[1].tv_sec = mktime(lt);
-	if (tsp[0].tv_sec == -1)
-terr:		errx(1,
-	"out of range or illegal time specification: [[CC]YY]MMDDhhmm[.SS]");
+	if (tsp[0].tv_sec == -1) {
+terr:		fprintf(stderr, "out of range or illegal time specification: [[CC]YY]MMDDhhmm[.SS]\n");
+		exit(1);
+	}
 
 	tsp[0].tv_nsec = tsp[1].tv_nsec = 0;
 }
@@ -251,8 +253,9 @@ stime_arg2(char *arg, int year, struct timespec *tsp)
 	time_t		 tmptime;
 					/* Start with the current time. */
 	tmptime = time(NULL);
-	if ((lt = localtime(&tmptime)) == NULL)
-		err(1, "localtime");
+	if ((lt = localtime(&tmptime)) == NULL) {
+		perror("localtime");
+	}
 
 	lt->tm_mon = ATOI2(arg);	/* MMDDhhmm[YY] */
 	if (lt->tm_mon > 12 || lt->tm_mon == 0)
@@ -278,9 +281,10 @@ stime_arg2(char *arg, int year, struct timespec *tsp)
 
 	lt->tm_isdst = -1;		/* Figure out DST. */
 	tsp[0].tv_sec = tsp[1].tv_sec = mktime(lt);
-	if (tsp[0].tv_sec == -1)
-terr:		errx(1,
-	"out of range or illegal time specification: MMDDhhmm[YY]");
+	if (tsp[0].tv_sec == -1) {
+terr:		fprintf(stderr, "out of range or illegal time specification: MMDDhhmm[YY]\n");
+		exit(1);
+	}
 
 	tsp[0].tv_nsec = tsp[1].tv_nsec = 0;
 }
@@ -290,8 +294,10 @@ stime_file(char *fname, struct timespec *tsp)
 {
 	struct stat	sb;
 
-	if (stat(fname, &sb))
-		err(1, "%s", fname);
+	if (stat(fname, &sb)) {
+		perror(fname);
+		exit(1);
+	}
 	tsp[0] = sb.st_atim;
 	tsp[1] = sb.st_mtim;
 }
@@ -337,9 +343,10 @@ stime_argd(char *arg, struct timespec *tsp)
 
 	tm.tm_isdst = -1;
 	tsp[0].tv_sec = utc ? l_timegm(&tm) : mktime(&tm);
-	if (tsp[0].tv_sec == -1)
-terr:		errx(1,
-  "out of range or illegal time specification: YYYY-MM-DDThh:mm:ss[.frac][Z]");
+	if (tsp[0].tv_sec == -1) {
+terr:		fprintf(stderr, "out of range or illegal time specification: YYYY-MM-DDThh:mm:ss[.frac][Z]\n");
+		exit(1);
+	}
 	tsp[1] = tsp[0];
 }
 
