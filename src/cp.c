@@ -91,8 +91,8 @@ int copy_dir(const char *src, const char *dst, int noclobber, int recursive)
 		if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
 			continue;
 
-		snprintf(srcpath, sizeof(srcpath), "%s/%s", src, entry->d_name);
-		snprintf(dstpath, sizeof(dstpath), "%s/%s", dst, entry->d_name);
+		sprintf(srcpath, "%s/%s", src, entry->d_name);
+		sprintf(dstpath, "%s/%s", dst, entry->d_name);
 
 		if (stat(srcpath, &st) < 0) {
 			perror(srcpath);

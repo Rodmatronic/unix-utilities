@@ -293,7 +293,7 @@ to_string(struct val *vp)
 	if (vp->type == string)
 		return;
 
-	snprintf(tmp, sizeof(tmp), "%ld", vp->u.i);
+	sprintf(tmp, "%ld", vp->u.i);
 	len = strlen(tmp) + 1;
 
 	s = malloc(len);

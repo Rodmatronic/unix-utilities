@@ -26,7 +26,7 @@ void walk(const char *path)
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
 
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", path, entry->d_name);
+        sprintf(fullpath, "%s/%s", path, entry->d_name);
         if (lstat(fullpath, &st) == -1)
             continue;
 
