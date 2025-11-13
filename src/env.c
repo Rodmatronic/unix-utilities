@@ -34,7 +34,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 
+extern int optind;
 static void usage(void);
 
 int

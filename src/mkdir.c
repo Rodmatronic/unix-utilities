@@ -38,6 +38,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
+
+extern int optind;
 
 int	mkpath(char *, mode_t, mode_t);
 static void usage(void);
