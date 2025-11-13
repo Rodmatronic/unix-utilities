@@ -422,7 +422,7 @@ printsignals(FILE *fp)
 void
 usage(void)
 {
-	(void)fprintf(stderr, "usage: kill [-signal_number | -signal_name |\n -s signal_name] pid ...\n");
-	(void)fprintf(stderr, "	   kill -l [exit_status]\n");
+	(void)fprintf(stderr, "usage: kill [-signal_number | -signal_name | -s signal_name] pid ...\n");
+	(void)fprintf(stderr, "       kill -l [exit_status]\n");
 	exit(1);
 }
