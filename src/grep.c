@@ -446,7 +446,7 @@ int advance(char *lp, char *ep){
 }
 
 void succeed(char *f){
-	long ftell();
+//	long ftell();
 
 	if (sflag)
 		return;

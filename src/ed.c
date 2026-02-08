@@ -97,9 +97,6 @@ int	wrapp;
 unsigned nlall = 128;
 
 int	*address();
-char	*ed_getline();
-char	*getblock();
-char	*place();
 jmp_buf	savej;
 char template[8] = "eXXXXXX";
 
@@ -454,7 +451,7 @@ int * address(void){
 		case ' ':
 		case '\t':
 			continue;
-	
+
 		case '+':
 			minus++;
 			if (a1==0)
@@ -467,7 +464,7 @@ int * address(void){
 			if (a1==0)
 				a1 = dot;
 			continue;
-	
+
 		case '?':
 		case '/':
 			compile(c);
@@ -488,11 +485,11 @@ int * address(void){
 					error(Q);
 			}
 			break;
-	
+
 		case '$':
 			a1 = dol;
 			break;
-	
+
 		case '.':
 			a1 = dot;
 			break;
@@ -504,7 +501,7 @@ int * address(void){
 				if (names[c-'a'] == (*a1 & ~01))
 					break;
 			break;
-	
+
 		default:
 			peekc = c;
 			if (a1==0)
@@ -913,7 +910,7 @@ char * getblock(int atl, int iof){
 	int bno, off;
 	char *p1, *p2;
 	int n;
-	
+
 	bno = (atl>>8)&0377;
 	off = (atl<<1)&0774;
 	if (bno >= 255) {
