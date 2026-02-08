@@ -14,8 +14,28 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "defs.h"
+
 #define BUF_SIZE 256
 #define MAX_ENTRIES 256
+
+#ifdef SYSTEM_LINUX
+struct unix_dirent {
+    unsigned long  d_ino;
+    unsigned long  d_off;
+    unsigned short d_reclen;
+    char           d_name[];
+};
+#endif
+
+#ifdef SYSTEM_MICRO86
+struct unix_dirent {
+    unsigned short d_ino;
+    unsigned short  d_off;
+    unsigned short d_reclen;
+    char           d_name[];
+};
+#endif
 
 struct entry {
 	char *name;
@@ -192,7 +212,7 @@ int main(int argc, char *argv[]){
 	int fd, nread, opt;
 	char *buf;
 	char d_type;
-	struct dirent *d;
+	struct unix_dirent *d;
 	struct entry *entries;
 	int entry_count = 0;
 	struct options opts = {0};
@@ -243,7 +263,7 @@ int main(int argc, char *argv[]){
 			break;
 
 		for (size_t bpos = 0; bpos < nread;) {
-			d = (struct dirent *)(buf + bpos);
+			d = (struct unix_dirent *)(buf + bpos);
 			d_type = *(buf + bpos + d->d_reclen - 1);
 
 			/* Skip . and .. unless -a/-f option */

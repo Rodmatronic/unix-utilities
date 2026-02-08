@@ -12,4 +12,7 @@
 
 #define L_HOST_NAME_MAX 512
 
+#define SYSTEM_LINUX
+//#define SYSTEM_MICRO86
+
 #endif
