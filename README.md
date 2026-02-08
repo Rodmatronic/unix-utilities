@@ -19,7 +19,7 @@ Open sourced unix utilities designed to compile on old GCC.
 |hostname|───────│|
 |kill    |───────│|
 |ln      |──│─────| Sucks
-|ls      |──────|─| Lacks colour
+|ls      |──────│─| Lacks colour
 |mkdir   |───────│|
 |mknod   |───────│|
 |mkfifo  |───────│|
