@@ -22,25 +22,19 @@
 #define	MAXN	100
 #define MODEBITS 07777
 
-#define ROOTINO 3
+#define ROOTINO 1
 
-char	*pname();
-char	*dname();
 struct	stat s1, s2;
 
-int chkdot(register char *s);
+int chkdot(char *s);
 int check(char *spth, int dinode);
-char* dname(register char *name);
-char* pname(register char *name);
+char* dname(char *name);
+char* pname(char *name);
 int mvdir(char *source, char *target);
 int move(char *source, char *target);
 
-int
-main(argc, argv)
-int argc;
-register char *argv[];
-{
-	register int i, r;
+int main(int argc, char *argv[]){
+	int i, r;
 
 	if (argc < 3)
 		goto usage;
@@ -66,11 +60,8 @@ usage:
 	return(1);
 }
 
-int
-move(source, target)
-char *source, *target;
-{
-	register int c, i;
+int move(char *source, char *target){
+	int c, i;
 	int	status;
 	char	buf[MAXN];
 
@@ -136,11 +127,8 @@ char *source, *target;
 	return(0);
 }
 
-int
-mvdir(source, target)
-char *source, *target;
-{
-	register char *p;
+int mvdir(char *source, char *target){
+	char *p;
 	char buf[MAXN];
 
 	if (stat(target, &s2) >= 0) {
@@ -242,12 +230,9 @@ char *source, *target;
 	return(0);
 }
 
-char *
-pname(name)
-register char *name;
-{
-	register int c;
-	register char *p, *q;
+char * pname(char *name){
+	int c;
+	char *p, *q;
 	static	char buf[MAXN];
 
 	p = q = buf;
@@ -260,11 +245,8 @@ register char *name;
 	return buf[0]? buf : DOT;
 }
 
-char *
-dname(name)
-register char *name;
-{
-	register char *p;
+char * dname(char *name){
+	char *p;
 
 	p = name;
 	while (*p)
@@ -273,11 +255,7 @@ register char *name;
 	return name;
 }
 
-int
-check(spth, dinode)
-char *spth;
-int dinode;
-{
+int check(char *spth, int dinode){
 	char nspth[MAXN];
 	struct stat sbuf;
 
@@ -303,10 +281,7 @@ int dinode;
 	return(0);
 }
 
-int
-chkdot(s)
-register char *s;
-{
+int chkdot(char *s){
 	do {
 		if (strcmp(dname(s), DOTDOT) == 0)
 			return(1);

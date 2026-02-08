@@ -33,7 +33,9 @@
 
 #include "defs.h"
 
-char *__progname;
+#define DEFFILEMODE (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)/* 0666*/
+
+char * progname;
 
 struct node {
 	const char *name;
@@ -58,13 +60,15 @@ main(int argc, char *argv[])
 	int mflag = 0;
 	int ch;
 
+	progname = argv[0];
+
 	node = reallocarray(NULL, sizeof(struct node), argc);
 	if (!node) {
 		perror("reallocarray");
 		exit(1);
 	}
 
-	ismkfifo = strcmp(__progname, "mkfifo") == 0;
+	ismkfifo = strcmp(argv[0], "mkfifo") == 0;
 
 	/* we parse all arguments upfront */
 	while (argc > 1) {
@@ -211,13 +215,13 @@ usage(int ismkfifo)
 
 	if (ismkfifo == 1)
 		(void)fprintf(stderr, "usage: %s fifo_name ...\n",
-		    __progname);
+		    progname);
 	else {
 		(void)fprintf(stderr,
 		    "usage: %s name b|c major minor\n",
-		    __progname);
+		    progname);
 		(void)fprintf(stderr, "       %s name p\n",
-		    __progname);
+		    progname);
 	}
 	exit(1);
 }
