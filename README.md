@@ -12,13 +12,14 @@ Open sourced unix utilities designed to compile on old GCC.
 |df      |│───────| TODO
 |du      |│───────| TODO
 |echo    |──────│─| Perhaps -e (MKSH include)
-|expr    |│───────| Doesn't compile due to lacking headers
-|env     |│───────| no unsetenv!
+|ed      |───────│|
+|expr    |───────│| Doesn't compile due to lacking headers
+|env     |───│────| no unsetenv!
 |false   |───────│|
 |hostname|───────│|
 |kill    |───────│|
 |ln      |──│─────| Sucks
-|ls      |──│─────| Lacks colour and doesn't render items properly on certain systems
+|ls      |──────|─| Lacks colour
 |mkdir   |───────│|
 |mknod   |───────│|
 |mkfifo  |───────│|
