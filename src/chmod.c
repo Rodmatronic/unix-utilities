@@ -21,21 +21,19 @@
 #define	SETID	06000	/* set[ug]id */
 #define	STICKY	01000	/* sticky bit */
 
-char	*ms;
-int	um;
-struct	stat st;
+char *ms;
+int um;
+struct stat st;
 
 int newmode(unsigned int nm);
-int chabs();
-int who();
-int what();
+int chabs(void);
+int who(void);
+int what(void);
 int where(int om);
 
-int
-main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	int i;
-	register char *p;
+	char *p;
 	int status = 0;
 
 	if (argc < 3) {
@@ -62,9 +60,7 @@ main(int argc, char **argv)
 	exit(status);
 }
 
-int
-newmode(unsigned int nm)
-{
+int newmode(unsigned int nm){
 	int o, m, b;
 
 	m = chabs();
@@ -95,9 +91,7 @@ newmode(unsigned int nm)
 	return(nm);
 }
 
-int
-chabs()
-{
+int chabs(void){
 	int c, i;
 
 	i = 0;
@@ -107,9 +101,7 @@ chabs()
 	return(i);
 }
 
-int
-who()
-{
+int who(void){
 	int m;
 
 	m = 0;
@@ -134,9 +126,7 @@ who()
 	}
 }
 
-int
-what()
-{
+int what(void){
 	switch (*ms) {
 	case '+':
 	case '-':
@@ -146,9 +136,7 @@ what()
 	return(0);
 }
 
-int
-where(int om)
-{
+int where(int om){
 	int m;
 
 	m = 0;
